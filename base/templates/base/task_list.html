@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+        }
+
+        .header {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .header a:hover {
+            color: #2980b9;
+        }
+
+        .container {
+            margin: 20px;
+        }
+
+        .welcome-message {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .task-manager {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2980b9;
+        }
+
+        .add-task-btn {
+            display: block;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .search-form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            padding: 10px;
+            width: 200px;
+            border: 1px solid #3498db;
+            border-radius: 5px;
+        }
+
+        .search-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .search-button:hover {
+            background: #2980b9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #2c3e50;
+            color: white;
+        }
+
+        td a {
+            color: #3498db;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+
+        td a:hover {
+            color: #2980b9;
+        }
+
+        .no-items-message {
+            text-align: center;
+            color: #e74c3c;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+    </style>
+    <title>Task Manager</title>
+</head>
+<body>
+    <div class="header">
+        {% if request.user.is_authenticated %}
+            <p>{{ request.user }}</p>
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}">Log In</a>
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <h1 class="task-manager">My Task Manager</h1>
+        <a href="{% url 'task-create' %}" class="add-task-btn">Add Task</a>
+
+        <form method="GET" class="search-form">
+            <input type='text' name='search-area' value="{{ search_input }}" class="search-input">
+            <input type="submit" value='Search' class="search-button">
+        </form>
+
+        <table>
+            <tr>
+                <th>Item</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            {% for task in tasks %}
+                <tr>
+                    <td>{{ task.title }}</td>
+                    <td><a href="{% url 'task-update' task.id %}">View</a></td>
+                    <td><a href="{% url 'task-update' task.id %}">Edit</a></td>
+                    <td><a href="{% url 'task-delete' task.id %}">Delete</a></td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4" class="no-items-message">No items in the list</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
